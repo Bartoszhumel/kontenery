@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import {Product} from "../components/Product.tsx";
 export default function Menu() {
     const [pizzaList, setPizzaList] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -19,18 +20,12 @@ export default function Menu() {
     }, []);
     return (
         <div className="App">
-            <body >
             <h1>Menu</h1>
             <div className="pizza-list" hidden={loading}>
-                {pizzaList.map((pizza) => (
-                    <div className="pizza-item" key={pizza.id}>
-                        <h2>{pizza.name}</h2>
-                        <p>{pizza.description}</p>
-                        <img src={pizza.image} height={150} width={150}></img>
-                    </div>))}
+                {pizzaList.map((pizza) => {
+                        return <Product product={pizza}/>
+                })}
                 </div>
-
-            </body>
         </div>
     );
 }
