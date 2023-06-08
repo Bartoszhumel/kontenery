@@ -1,28 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+
 export default function Home() {
-    const [pizzaList, setPizzaList] = useState([]);
-    const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        setLoading(true);
-        fetch('http://localhost:4000/getPizzas')
-            .then(response => response.json())
-            .then(data => {
-                setPizzaList(data);
-                console.log(data);
-                setLoading(false);
-            });
-    }, []);
     return (
         <body>
-        <div className="App">
-            <h1>Menu</h1>
-            <div className="pizza-list">
-                {pizzaList.map((pizza) => (
-                    <div className="pizza-item" key={pizza.id}>
-                        <h2>{pizza.name}</h2>
-                        <p>{pizza.description}</p>
-                    </div>))}
-            </div>
+        <div className="App" style={{backgroundImage : "url('pizzeria.png')",  height: "100vh",backgroundSize:"cover"}}>
+            <h1 style={{color:"white",fontSize:"50px"}}>Nasza pizzeria</h1>
+            <p style={{color:"white",fontSize:"20px"}}>Smakuj włoską tradycję w naszej przytulnej pizzerii!<br/> Serwujemy autentyczne włoskie pizze przygotowane z najwyższą starannością i najlepszych składników. Nasze wyjątkowe ciasto jest cienkie, chrupiące i doskonale zbalansowane. <br/>Oferujemy szeroki wybór pysznych kombinacji smakowych, które zadowolą nawet najbardziej wymagające podniebienia.<br/> Zapraszamy do naszej pizzerii, aby rozkoszować się aromatem świeżo upieczonej pizzy, w miłej i przyjaznej atmosferze. Czekamy na Ciebie!</p>
+
         </div>
         </body>
     );
