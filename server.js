@@ -51,7 +51,7 @@ app.get('/payment', async (req, res) => {
     const stripeObj = await stripe.checkout.sessions.create({
         success_url: 'http://localhost:3000/success',
         cancel_url: 'http://localhost:3000/cancel',
-        payment_method_types: ['card', 'p24'],
+        payment_method_types: ['card','blik'],
         line_items: [
             {
                 price_data: {
@@ -71,40 +71,12 @@ app.get('/payment', async (req, res) => {
     res.send(stripeObj);
 });
 app.get('/getPizzas', (req, res) => {
-    res.send([
-        { 
-            id: 1, 
-            name: "Margarita",
-            image: "margarita.png",
-            description: "Ser, sos pomidorowy, oregano",
-            smallPrice: 15,
-            mediumPrice: 20,
-        },
-        { 
-            id: 2, 
-            name: "Capriciosa",
-            image: "capriciosa.png",
-            description: "Ser, sos pomidorowy, szynka, pieczarki, oregano",
-            smallPrice: 15,
-            mediumPrice: 20,
-        },
-        { 
-            id: 3, 
-            name: "Pepperoni",
-            image: "pepperoni.png",
-            description: "Ser, sos pomidorowy, pepperoni, oregano",
-            smallPrice: 15,
-            mediumPrice: 20,
-        },
-        { 
-            id: 4, 
-            name: "Vegetariana",
-            image: "vegetariana.png",
-            description: "Ser, sos pomidorowy, papryka, kukurydza, pieczarki, oregano",
-            smallPrice: 15,
-            mediumPrice: 20,
-        }
-    ]);
+    const sqlQuery =  'SELECT * FROM Menu';
+    database.query(sqlQuery, (err, result) => {
+        if (err) throw err;
+
+        res.send(result);
+    });
 });
 
 app.listen(port, () => {
