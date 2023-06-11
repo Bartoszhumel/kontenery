@@ -1,6 +1,5 @@
 const express = require('express');
 const mysql = require('mysql');
-const { body, validationResult } = require('express-validator');
 const app = express();
 const bodyParser = require('body-parser');
 require('dotenv').config();
@@ -10,8 +9,6 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 require('dotenv').config()
 
 const port = process.env.NODE_DOCKER_PORT || 4000
-
-const YOUR_DOMAIN = 'http://localhost:4242';
 
 const database = mysql.createConnection({
     host: "mysqldb",
@@ -29,27 +26,14 @@ app.use((_req, res, next) => {
     next();
 });
 
-
-app.get('/', (req, res) => {
-
-    res.send("Hello world");
-});
-
-app.get('/init', (req, res) => {
-    const sqlQuery =  'CREATE TABLE IF NOT EXISTS emails(id int AUTO_INCREMENT, firstname VARCHAR(50), lastname VARCHAR(50), email VARCHAR(50), PRIMARY KEY(id))';
-
-    database.query(sqlQuery, (err) => {
-        if (err) throw err;
-
-        res.send('Table created!')
-    });
-});
 app.get('/payment', async (req, res) => {
     const price = parseInt(req.query.price);
-
+    const email = req.query.email;
+    const address = req.query.address;
+    const pizzas = req.query.pizzas;
     console.log(price);
     const stripeObj = await stripe.checkout.sessions.create({
-        success_url: 'http://localhost:3000/success',
+        success_url: 'http://localhost:3000/success?price='+price+'&email='+email+'&address='+address+'&pizzas='+pizzas,
         cancel_url: 'http://localhost:3000/cancel',
         payment_method_types: ['card','blik'],
         line_items: [
@@ -60,7 +44,7 @@ app.get('/payment', async (req, res) => {
                     product_data: {
                         name: 'Pizza',
                         description: 'zamówienie z restauracji :)',
-                        images: ['https://example.com/t-shirt.png'],
+                        images: ['app/my-app/public/margarita.png'],
                     },
                 },
                 quantity: 1,
@@ -68,6 +52,7 @@ app.get('/payment', async (req, res) => {
         ],
         mode: 'payment',
     });
+    console.log(stripeObj);
     res.send(stripeObj);
 });
 app.get('/getPizzas', (req, res) => {
@@ -78,7 +63,18 @@ app.get('/getPizzas', (req, res) => {
         res.send(result);
     });
 });
+app.get('/order',(req,res)=>{
+    const price = parseInt(req.query.price);
+    const email = req.query.email;
+    const address = req.query.address;
+    const pizzas = req.query.pizzas;
+    const sqlQuery =  'INSERT INTO Orders (price, email, address,pizzas_id) VALUES ('+price+', "'+email+'", "'+address+'", "'+pizzas+'")';
+    database.query(sqlQuery, (err, result) => {
+        if (err) throw err;
 
+        res.send(result);
+    });
+});
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
 })
