@@ -33,7 +33,7 @@ app.get('/payment', async (req, res) => {
     const pizzas = req.query.pizzas;
     console.log(price);
     const stripeObj = await stripe.checkout.sessions.create({
-        success_url: 'http://localhost:3000/success?price='+price+'&email='+email+'&address='+address+'&pizzas='+pizzas,
+        success_url: 'http://localhost:3000/success',
         cancel_url: 'http://localhost:3000/cancel',
         payment_method_types: ['card','blik'],
         line_items: [
