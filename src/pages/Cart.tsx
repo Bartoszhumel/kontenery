@@ -60,7 +60,11 @@ export const Cart = () => {
                     }
                 }
             }
-            const stripeResp = await fetch('http://localhost:4000/payment?price=' + totalCartAmount + '&email=' + email + '&address=' + shippingAddress + '&pizzas=' + pizzas);
+            sessionStorage.setItem('pizzas',pizzas.toString());
+            sessionStorage.setItem('email',email);
+            sessionStorage.setItem('address',shippingAddress);
+            sessionStorage.setItem('price',totalCartAmount.toString());
+            const stripeResp = await fetch('http://localhost:4000/payment?price=' + totalCartAmount);
             const {id: sessionId} = await stripeResp.json();
 
             const stripe = await stripePromise;

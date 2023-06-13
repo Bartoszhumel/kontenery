@@ -7,6 +7,7 @@ export const Navbar = () => {
     return (
         <div className="navbar">
             <div className="links">
+                <Link to={"/"}>Strona głowna</Link>
                 <Link to={"/menu"}>Menu</Link>
                 <Link to={"/koszyk"}>
                     <ShoppingCart size={32}/>
